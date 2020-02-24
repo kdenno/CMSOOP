@@ -27,8 +27,24 @@ if (Input::exists()) {
       )
     ));
     if ($validate->pass()) {
-      // register user
-      echo 'passed';
+      // Insert user data
+      $user = new User();
+      $salt = Hash::salt(32);
+      try {
+        $fields = array(
+          'username'=> Input::get('username') ,
+          'password'=> Hash::generate(Input::get('password'), $salt ) ,
+          'salt'=> $salt ,
+          'name'=> Input::get('name'),
+          'joined'=> date('Y-m-d H-i-s') ,
+          'group'=> 1 ,
+        );
+        $user->create($fields);
+      }catch(Exception $e) {
+        die($e->getMessage());
+      }
+     // Session::flash('success', 'You have registered successfully');
+     // header('Location: index.php');
     } else {
       // output errors
       var_dump($validate->errors());
