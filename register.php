@@ -45,6 +45,7 @@ if (Input::exists()) {
       }
      // Session::flash('success', 'You have registered successfully');
      // header('Location: index.php');
+     Redirect::to('index.php');
     } else {
       // output errors
       var_dump($validate->errors());
