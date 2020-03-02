@@ -10,9 +10,10 @@ if (Input::exists()) {
       )
     );
     if ($validation->pass()) {
+      $remember = (Input::get('remember') === 'on') ? true : false;
       // log user in
       $user = new User();
-      $login = $user->login(Input::get('username'), Input::get('password'));
+      $login = $user->login(Input::get('username'), Input::get('password'), $remember);
       if ($login) {
         echo 'success';
       } else {
@@ -39,6 +40,11 @@ if (Input::exists()) {
     <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
   </div>
   <div>
+    <div style="margin-top:10px; margin-bottom:10px;">
+      <label for="remember">
+        <input type="checkbox" name="remember">Remember Me
+      </label>
+    </div>
     <input type="submit" value="Log In">
   </div>
 

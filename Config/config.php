@@ -6,7 +6,7 @@
 // foreach ($db as $key => $value) {
 //   define(strtoupper($key), $value);
 // }
-if(!isset($_SESSION)) {
+if (!isset($_SESSION)) {
   session_start();
 }
 
@@ -31,4 +31,13 @@ spl_autoload_register(function ($class) {
 });
 require_once 'Functions/sanitize.php';
 require_once 'Functions/queryInit.php';
-
+// check if user asked to be remembered and is not logged in so we can log them in
+if (Cookie::exists(Config::get('remember/cookie_name') && !Session::get(Config::get('session/session_name')))) {
+  $queryObj = new Queries(DB::getDb());
+  $hashCheck = $queryObj->get('users_sessions', array('hash', '=', Cookie::get(Config::get('remember/cookie_name'))));
+  if ($hashCheck->count()) {
+    // hash matches, log user in
+    $user = new User($hashCheck->first()->user_id);
+    $user->login();
+  }
+}
