@@ -53,6 +53,10 @@ class User
     }
     return false;
   }
+  public function logout()
+  {
+    Session::delete($this->_sessionName);
+  }
   public function userdata()
   {
     return $this->_userdata;
